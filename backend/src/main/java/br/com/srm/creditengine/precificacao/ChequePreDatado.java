@@ -1,7 +1,11 @@
 package br.com.srm.creditengine.precificacao;
 
+import org.springframework.stereotype.Component;
+
 import java.math.BigDecimal;
 
+
+@Component
 public class ChequePreDatado implements EstrategiaPrecificacao {
 
     private static final BigDecimal SPREAD_MENSAL = new BigDecimal("0.025");

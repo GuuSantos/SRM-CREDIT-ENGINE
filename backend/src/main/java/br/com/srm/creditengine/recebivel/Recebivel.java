@@ -39,14 +39,13 @@ public class Recebivel {
     protected Recebivel() {}
 
     public Recebivel(Cedente cedente, TipoRecebivel tipo, String numero, BigDecimal valorFace,
-                     LocalDate vencimento, StatusRecebivel status, Long version, String criadoPor, Instant criadoEm) {
+                     LocalDate vencimento, String criadoPor, Instant criadoEm) {
         this.cedente = cedente;
         this.tipo = tipo;
         this.numero = numero;
         this.valorFace = valorFace;
         this.vencimento = vencimento;
         this.status = StatusRecebivel.PENDENTE;
-        this.version = version;
         this.criadoPor = criadoPor;
         this.criadoEm = criadoEm;
     }
