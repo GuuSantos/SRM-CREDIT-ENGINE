@@ -75,3 +75,11 @@ export const api = {
     requisicao<PaginaExtrato>("GET", `/liquidacoes?${new URLSearchParams(filtro)}`).then((r) => r.dados),
 };
 
+export function mensagemDe(erro: unknown): string {
+  if (erro instanceof ErroApi) {
+    const campos = erro.problema.campos?.map((c) => `${c.campo}: ${c.mensagem}`).join("; ");
+    return campos ? `${erro.message} (${campos})` : erro.message;
+  }
+  return "Erro inesperado";
+}
+
