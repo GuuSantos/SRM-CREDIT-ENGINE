@@ -1,6 +1,6 @@
 package br.com.srm.creditengine.taxas;
 
-import br.com.srm.creditengine.NegocioException;
+import br.com.srm.creditengine.comum.NegocioException;
 import org.springframework.http.HttpStatus;
 
 public class TaxaNaoEncontradaException extends NegocioException {

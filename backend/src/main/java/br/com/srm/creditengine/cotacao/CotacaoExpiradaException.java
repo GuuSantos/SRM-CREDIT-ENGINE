@@ -1,6 +1,6 @@
 package br.com.srm.creditengine.cotacao;
 
-import br.com.srm.creditengine.NegocioException;
+import br.com.srm.creditengine.comum.NegocioException;
 import org.springframework.http.HttpStatus;
 
 public class CotacaoExpiradaException extends NegocioException {

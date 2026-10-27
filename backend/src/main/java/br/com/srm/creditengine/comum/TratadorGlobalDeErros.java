@@ -1,4 +1,4 @@
-package br.com.srm.creditengine;
+package br.com.srm.creditengine.comum;
 
 
 import org.slf4j.Logger;
