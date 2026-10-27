@@ -13,9 +13,13 @@ import java.security.Principal;
 public class TaxaController {
 
     private final TaxaService taxaService;
+    private final AtualizadorCambio atualizadorCambio;
 
-    public TaxaController(TaxaService taxaService) {
+
+    public TaxaController(TaxaService taxaService, AtualizadorCambio atualizadorCambio) {
         this.taxaService = taxaService;
+        this.atualizadorCambio = atualizadorCambio;
+
     }
 
     @GetMapping("/vigentes")
@@ -35,5 +39,11 @@ public class TaxaController {
     public CambioResponse cadastrarCambio(@Valid @RequestBody CadastroCambioRequest request, Principal usuario) {
         TaxaCambio cambio = taxaService.cadastrarCambio(request.brlPorUnidade(), FonteCambio.MANUAL, usuario.getName());
         return CambioResponse.de(cambio, false);
+    }
+
+    @PostMapping("/cambio/atualizar")
+    @ResponseStatus(HttpStatus.CREATED)
+    public CambioResponse atualizarCambioPeloProvedor(Principal usuario){
+        return CambioResponse.de(atualizadorCambio.atualizar(usuario.getName()), false);
     }
 }
