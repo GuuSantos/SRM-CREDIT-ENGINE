@@ -17,7 +17,7 @@ export function Navegacao() {
 
   return (
     <header className="border-b bg-white">
-      <nav className="mx-auto flex max-w-6xl items-center gap-6 px-4 py-3">
+      <nav className="mx-auto flex max-w-screen-2xl items-center gap-6 px-6 py-3">
         <span className="flex items-center gap-2 font-semibold text-slate-900">
         <span className="grid h-7 w-7 place-items-center rounded-md bg-blue-800 text-xs font-bold text-white">CE</span>
         Credit Engine

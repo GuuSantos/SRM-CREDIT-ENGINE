@@ -2,8 +2,10 @@
 
 import { mascararMoeda, CamposRecebivel } from "@/lib/conversao";
 import type { Cedente, Moeda, TipoRecebivel } from "@/lib/tipos";
+import { hojeEmSaoPaulo, somarDias } from "@/lib/formatar";
 
 const CAMPO = "mt-1 w-full rounded border px-3 py-2 disabled:bg-slate-100";
+const ATALHOS_PRAZO = [30, 60, 90, 120];
 
 type Props = {
   campos: CamposRecebivel;
@@ -66,15 +68,29 @@ export function FormularioRecebivel({ campos, cedentes, bloqueado, aoMudar }: Pr
         />
       </label>
 
-      <label className="text-sm">
-        Vencimento
-        <input
-          type="date"
-          value={campos.vencimento}
-          onChange={(e) => alterar("vencimento", e.target.value)}
-          className={CAMPO}
-        />
-      </label>
+        <div className="text-sm">
+        <label>
+            Vencimento
+            <input
+            type="date"
+            value={campos.vencimento}
+            onChange={(e) => alterar("vencimento", e.target.value)}
+            className={CAMPO}
+            />
+        </label>
+        <div className="mt-2 flex gap-2">
+            {ATALHOS_PRAZO.map((dias) => (
+            <button
+                key={dias}
+                type="button"
+                onClick={() => alterar("vencimento", somarDias(hojeEmSaoPaulo(), dias))}
+                className="rounded border px-2 py-0.5 text-xs text-slate-600 hover:bg-slate-100"
+            >
+                +{dias}d
+            </button>
+            ))}
+        </div>
+        </div>
 
       <label className="text-sm sm:col-span-2">
         Moeda de pagamento

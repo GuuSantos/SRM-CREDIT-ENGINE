@@ -38,3 +38,8 @@ export function hojeEmSaoPaulo(): string {
 export function normalizarInstante(instante: string): string {
   return instante.replace(/(\.\d{3})\d+/, "$1");
 }
+
+export function somarDias(data: string, dias: number): string {
+  const [ano, mes, dia] = data.split("-").map(Number);
+  return new Date(Date.UTC(ano, mes - 1, dia + dias)).toISOString().slice(0, 10);
+}
