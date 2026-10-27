@@ -134,6 +134,13 @@ class ApiHttpTest {
                 .andExpect(status().isUnauthorized());
     }
 
+    @Test
+    void listaCedentesOrdenadosPorRazaoSocial() throws Exception {
+        mvc.perform(get("/cedentes").with(httpBasic("operador1", "senha-operador-teste")))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[?(@.cnpj == '12345678000195')].razaoSocial").value("Metalúrgica Alfa Ltda"));
+    }
+
     private static String corpoRecebivel(String tipo, String valorFace, String moeda) {
         LocalDate vencimento = LocalDate.now(ZoneId.of("America/Sao_Paulo")).plusDays(90);
         return """
