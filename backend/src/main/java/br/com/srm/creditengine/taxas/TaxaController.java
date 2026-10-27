@@ -19,20 +19,20 @@ public class TaxaController {
     }
 
     @GetMapping("/vigentes")
-    public TaxasVigentesResponse vigentes(){
+    public TaxasVigentesResponse vigentes() {
         TaxaCambio cambio = taxaService.cambioVigente(Moeda.USD);
         return new TaxasVigentesResponse(TaxaBaseResponse.de(taxaService.taxaBaseVigente()), CambioResponse.de(cambio, taxaService.cambioDesatualizado(cambio)));
     }
 
     @PostMapping("/base")
     @ResponseStatus(HttpStatus.CREATED)
-    public TaxaBaseResponse cadastrarTaxaBase(@Valid @RequestBody CadastroTaxaBaseRequest request, Principal usuario){
+    public TaxaBaseResponse cadastrarTaxaBase(@Valid @RequestBody CadastroTaxaBaseRequest request, Principal usuario) {
         return TaxaBaseResponse.de(taxaService.cadastrarTaxaBase(request.taxaMensal(), usuario.getName()));
     }
 
     @PostMapping("/cambio")
     @ResponseStatus(HttpStatus.CREATED)
-    public CambioResponse cadastrarCambio(@Valid @RequestBody CadastroCambioRequest request, Principal usuario){
+    public CambioResponse cadastrarCambio(@Valid @RequestBody CadastroCambioRequest request, Principal usuario) {
         TaxaCambio cambio = taxaService.cadastrarCambio(request.brlPorUnidade(), FonteCambio.MANUAL, usuario.getName());
         return CambioResponse.de(cambio, false);
     }

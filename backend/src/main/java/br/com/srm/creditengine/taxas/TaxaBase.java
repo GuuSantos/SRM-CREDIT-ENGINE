@@ -19,7 +19,8 @@ public class TaxaBase {
     private String criadoPor;
     private Instant criadoEm;
 
-    protected TaxaBase() {}
+    protected TaxaBase() {
+    }
 
     public TaxaBase(BigDecimal taxaMensal, Instant vigenteDesde, String criadoPor, Instant criadoEm) {
         this.taxaMensal = taxaMensal;

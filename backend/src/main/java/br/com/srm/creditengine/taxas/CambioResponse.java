@@ -15,8 +15,8 @@ public record CambioResponse(
         String criadoPor,
         boolean desatualizado
 ) {
-    static CambioResponse de(TaxaCambio cambio, boolean desatualizado){
+    static CambioResponse de(TaxaCambio cambio, boolean desatualizado) {
         return new CambioResponse(cambio.getId(), cambio.getMoeda(), cambio.getBrlPorUnidade(), cambio.getVigenteDesde(),
-                            cambio.getFonte(), cambio.getCriadoPor(), desatualizado);
+                cambio.getFonte(), cambio.getCriadoPor(), desatualizado);
     }
 }

@@ -39,7 +39,9 @@ public class TaxaCambio {
         this.criadoEm = criadoEm;
     }
 
-    public Long getId() { return id; }
+    public Long getId() {
+        return id;
+    }
 
     public Moeda getMoeda() {
         return moeda;

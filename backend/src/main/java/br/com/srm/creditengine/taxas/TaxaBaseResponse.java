@@ -10,8 +10,8 @@ public record TaxaBaseResponse(
         @JsonFormat(shape = JsonFormat.Shape.STRING) BigDecimal taxaMensal,
         Instant vigenteDesde,
         String criadoPor
-        ) {
-    static TaxaBaseResponse de(TaxaBase taxa){
+) {
+    static TaxaBaseResponse de(TaxaBase taxa) {
         return new TaxaBaseResponse(taxa.getId(), taxa.getTaxaMensal(), taxa.getVigenteDesde(), taxa.getCriadoPor());
     }
 }
