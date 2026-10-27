@@ -38,6 +38,7 @@ public class SegurancaConfig {
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                         .requestMatchers(HttpMethod.POST, "/taxas/**").hasRole(TESOURARIA)
                         .requestMatchers(HttpMethod.GET, "/taxas/**").hasAnyRole(OPERADOR, TESOURARIA)
+                        .requestMatchers(HttpMethod.GET, "/usuarios/eu").authenticated()
                         .anyRequest().hasRole(OPERADOR))
                 .httpBasic(basic -> basic.authenticationEntryPoint((requisicao, resposta, erro) ->
                         escreverProblema(resposta, 401, "Unauthorized", "NAO_AUTENTICADO",

@@ -120,6 +120,20 @@ class ApiHttpTest {
                 .andExpect(jsonPath("$.codigo").value("COTACAO_DE_OUTRO_OPERADOR"));
     }
 
+    @Test
+    void usuarioAutenticadoConsultaOProprioPerfil() throws Exception {
+        mvc.perform(get("/usuarios/eu").with(httpBasic("tesouraria1", "senha-tesouraria-teste")))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.usuario").value("tesouraria1"))
+                .andExpect(jsonPath("$.perfis[0]").value("TESOURARIA"));
+    }
+
+    @Test
+    void senhaErradaNoUsuarioAtualRetorna401() throws Exception {
+        mvc.perform(get("/usuarios/eu").with(httpBasic("operador1", "senha-errada")))
+                .andExpect(status().isUnauthorized());
+    }
+
     private static String corpoRecebivel(String tipo, String valorFace, String moeda) {
         LocalDate vencimento = LocalDate.now(ZoneId.of("America/Sao_Paulo")).plusDays(90);
         return """
