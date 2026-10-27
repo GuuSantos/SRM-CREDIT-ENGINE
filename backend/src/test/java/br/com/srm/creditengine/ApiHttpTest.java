@@ -15,9 +15,7 @@ import java.time.ZoneId;
 import java.util.UUID;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -118,6 +116,37 @@ class ApiHttpTest {
         mvc.perform(put("/cotacoes/{id}/liquidacao", cotacaoId).with(httpBasic("operador2", "senha-operador-teste")))
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.codigo").value("COTACAO_DE_OUTRO_OPERADOR"));
+    }
+
+    @Test
+    void usuarioAutenticadoConsultaOProprioPerfil() throws Exception {
+        mvc.perform(get("/usuarios/eu").with(httpBasic("tesouraria1", "senha-tesouraria-teste")))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.usuario").value("tesouraria1"))
+                .andExpect(jsonPath("$.perfis[0]").value("TESOURARIA"));
+    }
+
+    @Test
+    void senhaErradaNoUsuarioAtualRetorna401() throws Exception {
+        mvc.perform(get("/usuarios/eu").with(httpBasic("operador1", "senha-errada")))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void listaCedentesOrdenadosPorRazaoSocial() throws Exception {
+        mvc.perform(get("/cedentes").with(httpBasic("operador1", "senha-operador-teste")))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[?(@.cnpj == '12345678000195')].razaoSocial").value("Metalúrgica Alfa Ltda"));
+    }
+
+    @Test
+    void preflightDoFrontRecebeCabecalhosCors() throws Exception {
+        mvc.perform(options("/usuarios/eu")
+                        .header("Origin", "http://localhost:3000")
+                        .header("Access-Control-Request-Method", "GET")
+                        .header("Access-Control-Request-Headers", "authorization"))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:3000"));
     }
 
     private static String corpoRecebivel(String tipo, String valorFace, String moeda) {
