@@ -64,7 +64,7 @@ public class SegurancaConfig {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
+    @Bean(name = "corsConfigurationSource")
     public CorsConfigurationSource configuracaoCors(@Value("${seguranca.cors.origem:http://localhost:3000}") String origem) {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(List.of(origem));

@@ -15,9 +15,7 @@ import java.time.ZoneId;
 import java.util.UUID;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -139,6 +137,16 @@ class ApiHttpTest {
         mvc.perform(get("/cedentes").with(httpBasic("operador1", "senha-operador-teste")))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[?(@.cnpj == '12345678000195')].razaoSocial").value("Metalúrgica Alfa Ltda"));
+    }
+
+    @Test
+    void preflightDoFrontRecebeCabecalhosCors() throws Exception {
+        mvc.perform(options("/usuarios/eu")
+                        .header("Origin", "http://localhost:3000")
+                        .header("Access-Control-Request-Method", "GET")
+                        .header("Access-Control-Request-Headers", "authorization"))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:3000"));
     }
 
     private static String corpoRecebivel(String tipo, String valorFace, String moeda) {
