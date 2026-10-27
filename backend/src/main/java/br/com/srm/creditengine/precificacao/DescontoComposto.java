@@ -9,9 +9,10 @@ import java.math.RoundingMode;
 final class DescontoComposto {
     static final MathContext PRECISAO = MathContext.DECIMAL128;
 
-    private DescontoComposto() {}
+    private DescontoComposto() {
+    }
 
-    static BigDecimal valorPresente(BigDecimal valorFace, BigDecimal taxaMensal, BigDecimal prazoMeses){
+    static BigDecimal valorPresente(BigDecimal valorFace, BigDecimal taxaMensal, BigDecimal prazoMeses) {
         BigDecimal fator = BigDecimal.ONE.add(taxaMensal);
         BigDecimal fatorNoPrazo = elevar(fator, prazoMeses);
         return valorFace.divide(fatorNoPrazo, PRECISAO);

@@ -8,5 +8,5 @@ public interface EstrategiaPrecificacao {
 
     BigDecimal spreadMensal();
 
-    BigDecimal calcularValorPresente(BigDecimal valorFace , BigDecimal taxaBaseMensal, BigDecimal prazoMeses);
+    BigDecimal calcularValorPresente(BigDecimal valorFace, BigDecimal taxaBaseMensal, BigDecimal prazoMeses);
 }
