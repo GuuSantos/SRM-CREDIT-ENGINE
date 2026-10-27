@@ -1,4 +1,4 @@
-import { Cedente, Cotacao, DadosRecebivel, PaginaExtrato, Problema, Simulacao, Usuario } from "./tipos";
+import { Cambio, Cedente, Cotacao, DadosRecebivel, PaginaExtrato, Problema, Simulacao, TaxaBase, TaxasVigentes, Usuario } from "./tipos";
 
 const URL_API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080";
 
@@ -73,6 +73,12 @@ export const api = {
     })),
   extrato: (filtro: Record<string, string>) =>
     requisicao<PaginaExtrato>("GET", `/liquidacoes?${new URLSearchParams(filtro)}`).then((r) => r.dados),
+    taxasVigentes: () => requisicao<TaxasVigentes>("GET", "/taxas/vigentes").then((r) => r.dados),
+  cadastrarTaxaBase: (taxaMensal: string) =>
+    requisicao<TaxaBase>("POST", "/taxas/base", { taxaMensal }).then((r) => r.dados),
+  cadastrarCambio: (brlPorUnidade: string) =>
+    requisicao<Cambio>("POST", "/taxas/cambio", { brlPorUnidade }).then((r) => r.dados),
+  atualizarCambio: () => requisicao<Cambio>("POST", "/taxas/cambio/atualizar").then((r) => r.dados),
 };
 
 export function mensagemDe(erro: unknown): string {
@@ -82,4 +88,6 @@ export function mensagemDe(erro: unknown): string {
   }
   return "Erro inesperado";
 }
+
+
 

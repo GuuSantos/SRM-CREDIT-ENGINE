@@ -84,3 +84,17 @@ export type Problema = {
   campos?: { campo: string; mensagem: string }[];
   traceId?: string;
 };
+
+export type TaxaBase = { id: number; taxaMensal: string; vigenteDesde: string; criadoPor: string };
+
+export type Cambio = {
+  id: number;
+  moeda: Moeda;
+  brlPorUnidade: string;
+  vigenteDesde: string;
+  fonte: "PROVEDOR" | "MANUAL";
+  criadoPor: string;
+  desatualizado: boolean;
+};
+
+export type TaxasVigentes = { taxaBase: TaxaBase; cambioUsd: Cambio };
