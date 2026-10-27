@@ -1,7 +1,10 @@
 package br.com.srm.creditengine.recebivel;
 
-public class RecebivelIndisponivelException extends RuntimeException {
+import br.com.srm.creditengine.NegocioException;
+import org.springframework.http.HttpStatus;
+
+public class RecebivelIndisponivelException extends NegocioException {
     public RecebivelIndisponivelException(String message) {
-        super(message);
+        super(HttpStatus.CONFLICT,"RECEBIVEL_INDISPONIVEL",message);
     }
 }

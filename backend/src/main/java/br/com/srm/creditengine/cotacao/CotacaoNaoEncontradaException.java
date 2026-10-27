@@ -1,7 +1,10 @@
 package br.com.srm.creditengine.cotacao;
 
-public class CotacaoNaoEncontradaException extends RuntimeException {
+import br.com.srm.creditengine.NegocioException;
+import org.springframework.http.HttpStatus;
+
+public class CotacaoNaoEncontradaException extends NegocioException {
     public CotacaoNaoEncontradaException(String message) {
-        super(message);
+        super(HttpStatus.NOT_FOUND,"COTACAO_NAO_ENCONTRADA",message);
     }
 }

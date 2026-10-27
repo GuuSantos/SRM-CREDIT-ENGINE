@@ -1,7 +1,10 @@
 package br.com.srm.creditengine.cotacao;
 
-public class CotacaoDeOutroUsuarioException extends RuntimeException {
+import br.com.srm.creditengine.NegocioException;
+import org.springframework.http.HttpStatus;
+
+public class CotacaoDeOutroUsuarioException extends NegocioException {
     public CotacaoDeOutroUsuarioException(String message) {
-        super(message);
+        super(HttpStatus.FORBIDDEN,"COTACAO_DE_OUTRO_OPERADOR",message);
     }
 }

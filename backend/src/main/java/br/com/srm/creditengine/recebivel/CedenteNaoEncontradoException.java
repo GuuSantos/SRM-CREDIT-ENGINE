@@ -1,7 +1,10 @@
 package br.com.srm.creditengine.recebivel;
 
-public class CedenteNaoEncontradoException extends RuntimeException {
+import br.com.srm.creditengine.NegocioException;
+import org.springframework.http.HttpStatus;
+
+public class CedenteNaoEncontradoException extends NegocioException {
     public CedenteNaoEncontradoException(String message) {
-        super(message);
+        super(HttpStatus.NOT_FOUND,"CEDENTE_NAO_ENCONTRADO",message);
     }
 }
