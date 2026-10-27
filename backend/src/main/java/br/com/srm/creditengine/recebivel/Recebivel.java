@@ -56,7 +56,7 @@ public class Recebivel {
 
     public void marcarComoLiquidado(){
         if(!estaPendente()){
-            throw new IllegalStateException("Recebível " + id+ "já está liquidado!");
+            throw new RecebivelIndisponivelException("O recebível " + id + " já foi liquidado");
         }
         this.status = StatusRecebivel.LIQUIDADO;
     }
