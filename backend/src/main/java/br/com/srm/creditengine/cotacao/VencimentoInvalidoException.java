@@ -1,7 +1,11 @@
 package br.com.srm.creditengine.cotacao;
 
-public class VencimentoInvalidoException extends RuntimeException{
-    public VencimentoInvalidoException(String mensagem){
-        super(mensagem);
+import br.com.srm.creditengine.comum.NegocioException;
+import org.springframework.http.HttpStatus;
+
+public class VencimentoInvalidoException extends NegocioException {
+
+    protected VencimentoInvalidoException(String mensagem) {
+        super(HttpStatus.UNPROCESSABLE_CONTENT, "COTACAO_EXPIRADA", mensagem);
     }
 }

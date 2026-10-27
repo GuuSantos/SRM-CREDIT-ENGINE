@@ -1,7 +1,10 @@
 package br.com.srm.creditengine.taxas;
 
-public class CambioDesatualizadoException extends RuntimeException {
+import br.com.srm.creditengine.comum.NegocioException;
+import org.springframework.http.HttpStatus;
+
+public class CambioDesatualizadoException extends NegocioException {
     public CambioDesatualizadoException(String message) {
-        super(message);
+        super(HttpStatus.UNPROCESSABLE_CONTENT,"CAMBIO_DESATUALIZADO",message);
     }
 }

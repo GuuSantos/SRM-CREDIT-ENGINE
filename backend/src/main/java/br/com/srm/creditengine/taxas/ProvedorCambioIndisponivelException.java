@@ -1,12 +1,15 @@
 package br.com.srm.creditengine.taxas;
 
-public class ProvedorCambioIndisponivelException extends RuntimeException {
+import br.com.srm.creditengine.comum.NegocioException;
+import org.springframework.http.HttpStatus;
+
+public class ProvedorCambioIndisponivelException extends NegocioException {
 
     public ProvedorCambioIndisponivelException(String mensagem) {
-        super(mensagem);
+        super(HttpStatus.SERVICE_UNAVAILABLE,"PROVEDOR_CAMBIO_INDISPONIVEL",mensagem);
     }
 
     public ProvedorCambioIndisponivelException(String mensagem, Throwable causa) {
-        super(mensagem, causa);
+        super(HttpStatus.SERVICE_UNAVAILABLE,"PROVEDOR_CAMBIO_INDISPONIVEL",mensagem, causa);
     }
 }

@@ -1,7 +1,10 @@
 package br.com.srm.creditengine.taxas;
 
-public class TaxaNaoEncontradaException extends RuntimeException {
+import br.com.srm.creditengine.comum.NegocioException;
+import org.springframework.http.HttpStatus;
+
+public class TaxaNaoEncontradaException extends NegocioException {
     public TaxaNaoEncontradaException(String mensagem) {
-        super(mensagem);
+        super(HttpStatus.NOT_FOUND,"TAXA_NAO_ENCONTRADA",mensagem);
     }
 }
