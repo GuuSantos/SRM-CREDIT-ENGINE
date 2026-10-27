@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { CAMPOS_VAZIOS, mascararMoeda, montarDados, paraDecimalApi, percentualParaFracao } from "./conversao";
+import { CAMPOS_VAZIOS, mascararDecimal, mascararMoeda, montarDados, paraDecimalApi, percentualParaFracao } from "./conversao";
 
 describe("mascararMoeda", () => {
   it("entra pelos centavos e agrupa os milhares", () => {
@@ -58,5 +58,17 @@ describe("montarDados", () => {
       vencimento: "2027-01-25",
       moedaPagamento: "BRL",
     });
+  });
+});
+
+describe("mascararDecimal", () => {
+  it("usa as casas de cada campo", () => {
+    expect(mascararDecimal("125", 2, 4)).toBe("1,25");
+    expect(mascararDecimal("54321", 4, 8)).toBe("5,4321");
+    expect(mascararDecimal("5", 4, 8)).toBe("0,0005");
+  });
+
+  it("respeita o limite de dígitos", () => {
+    expect(mascararDecimal("123456", 2, 4)).toBe("12,34");
   });
 });
