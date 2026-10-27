@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="br.com.srm.creditengine.extrato.ExtratoMapper">
+
+    <!-- Ordem dos <arg> = ordem dos componentes do record ItemExtrato -->
+    <resultMap id="itemExtrato" type="br.com.srm.creditengine.extrato.ItemExtrato">
+        <constructor>
+            <idArg column="id" javaType="java.lang.Long"/>
+            <arg column="cotacao_id" javaType="java.lang.String"/>
+            <arg column="cedente_cnpj" javaType="java.lang.String"/>
+            <arg column="cedente_razao_social" javaType="java.lang.String"/>
+            <arg column="numero_titulo" javaType="java.lang.String"/>
+            <arg column="tipo" javaType="br.com.srm.creditengine.precificacao.TipoRecebivel"/>
+            <arg column="valor_face" javaType="java.math.BigDecimal"/>
+            <arg column="valor_presente_brl" javaType="java.math.BigDecimal"/>
+            <arg column="desagio" javaType="java.math.BigDecimal"/>
+            <arg column="moeda_pagamento" javaType="br.com.srm.creditengine.precificacao.Moeda"/>
+            <arg column="valor_pagamento" javaType="java.math.BigDecimal"/>
+            <arg column="cambio_brl_por_usd" javaType="java.math.BigDecimal"/>
+            <arg column="taxa_base_mensal" javaType="java.math.BigDecimal"/>
+            <arg column="spread_mensal" javaType="java.math.BigDecimal"/>
+            <arg column="prazo_dias" javaType="java.lang.Integer"/>
+            <arg column="liquidado_por" javaType="java.lang.String"/>
+            <arg column="liquidado_em" javaType="java.time.Instant"/>
+        </constructor>
+    </resultMap>
+
+    <!-- Filtros compartilhados entre contagem e busca: só parâmetros vinculados (#{}), nunca interpolação de texto -->
+    <sql id="filtros">
+        <where>
+            l.liquidado_em &gt;= #{inicio}
+            AND l.liquidado_em &lt; #{fim}
+            <if test="cnpj != null">
+                AND c.cnpj = #{cnpj}
+            </if>
+            <if test="moeda != null">
+                AND l.moeda_pagamento = #{moeda}
+            </if>
+        </where>
+    </sql>
+
+    <sql id="direcao">
+        <choose>
+            <when test="crescente">ASC</when>
+            <otherwise>DESC</otherwise>
+        </choose>
+    </sql>
+
+    <select id="contar" resultType="long">
+        SELECT COUNT(*)
+        FROM liquidacao l
+        JOIN cedente c ON c.id = l.cedente_id
+        <include refid="filtros"/>
+    </select>
+
+    <select id="buscar" resultMap="itemExtrato">
+        SELECT l.id,
+        CAST(l.cotacao_id AS VARCHAR) AS cotacao_id,
+        c.cnpj                        AS cedente_cnpj,
+        c.razao_social                AS cedente_razao_social,
+        r.numero                      AS numero_titulo,
+        l.tipo,
+        l.valor_face,
+        l.valor_presente_brl,
+        l.desagio,
+        l.moeda_pagamento,
+        l.valor_pagamento,
+        l.cambio_brl_por_usd,
+        l.taxa_base_mensal,
+        l.spread_mensal,
+        l.prazo_dias,
+        l.liquidado_por,
+        l.liquidado_em
+        FROM liquidacao l
+        JOIN cedente c ON c.id = l.cedente_id
+        JOIN recebivel r ON r.id = l.recebivel_id
+        <include refid="filtros"/>
+        ORDER BY
+        <choose>
+            <when test="ordenarPor == 'VALOR_FACE'">l.valor_face</when>
+            <when test="ordenarPor == 'VALOR_PAGAMENTO'">l.valor_pagamento</when>
+            <when test="ordenarPor == 'DESAGIO'">l.desagio</when>
+            <otherwise>l.liquidado_em</otherwise>
+        </choose>
+        <include refid="direcao"/>,
+        l.id <include refid="direcao"/>
+        LIMIT #{limite} OFFSET #{deslocamento}
+    </select>
+</mapper>
