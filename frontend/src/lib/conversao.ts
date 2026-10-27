@@ -51,10 +51,16 @@ export function montarDados(campos: CamposRecebivel): DadosRecebivel | null {
   };
 }
 
-export function mascararMoeda(texto: string): string {
-  const digitos = texto.replace(/\D/g, "").replace(/^0+/, "").slice(0, DIGITOS_MAXIMOS_VALOR);
+// Máscara por casas fixas: os dígitos entram pela direita, como em app de banco.
+// mascararDecimal("125", 2, 4) → "1,25"   |   mascararDecimal("54321", 4, 8) → "5,4321"
+export function mascararDecimal(texto: string, casas: number, digitosMaximos: number): string {
+  const digitos = texto.replace(/\D/g, "").replace(/^0+/, "").slice(0, digitosMaximos);
   if (!digitos) return "";
-  const completo = digitos.padStart(3, "0");
-  const inteiro = completo.slice(0, -2).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-  return `${inteiro},${completo.slice(-2)}`;
+  const completo = digitos.padStart(casas + 1, "0");
+  const inteiro = completo.slice(0, -casas).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  return `${inteiro},${completo.slice(-casas)}`;
+}
+
+export function mascararMoeda(texto: string): string {
+  return mascararDecimal(texto, 2, DIGITOS_MAXIMOS_VALOR);
 }

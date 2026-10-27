@@ -3,12 +3,17 @@
 import { useCallback, useEffect, useState } from "react";
 import { AreaRestrita } from "@/components/AreaRestrita";
 import { api, mensagemDe } from "@/lib/api";
-import { paraDecimalApi, percentualParaFracao } from "@/lib/conversao";
+import { mascararDecimal, paraDecimalApi, percentualParaFracao } from "@/lib/conversao";
 import { formatarDataHora, formatarNumero, formatarPercentual } from "@/lib/formatar";
 import type { TaxasVigentes } from "@/lib/tipos";
 
 const CAMPO = "mt-1 w-full rounded border px-3 py-2";
 const BOTAO = "rounded bg-blue-700 px-4 py-2 font-medium text-white hover:bg-blue-800 disabled:opacity-50";
+
+const CASAS_TAXA = 2;
+const DIGITOS_TAXA = 4;   // até 99,99% (o backend limita a 20%)
+const CASAS_CAMBIO = 4;
+const DIGITOS_CAMBIO = 8; // até 9.999,9999
 
 type Mensagem = { tipo: "ok" | "erro"; texto: string };
 
@@ -108,9 +113,9 @@ function Taxas() {
               Nova taxa (% ao mês)
               <input
                 value={percentual}
-                onChange={(e) => setPercentual(e.target.value)}
-                inputMode="decimal"
-                placeholder="1,25"
+                onChange={(e) => setPercentual(mascararDecimal(e.target.value, CASAS_TAXA, DIGITOS_TAXA))}
+                inputMode="numeric"
+                placeholder="0,00"
                 className={CAMPO}
               />
             </label>
@@ -151,9 +156,9 @@ function Taxas() {
               Ou informe manualmente (R$ por US$)
               <input
                 value={cambioManual}
-                onChange={(e) => setCambioManual(e.target.value)}
-                inputMode="decimal"
-                placeholder="5,4321"
+                onChange={(e) => setCambioManual(mascararDecimal(e.target.value, CASAS_CAMBIO, DIGITOS_CAMBIO))}
+                inputMode="numeric"
+                placeholder="0,0000"
                 className={CAMPO}
               />
             </label>
