@@ -27,6 +27,11 @@ function parametrosDe(filtro: Filtro, pagina: number): Record<string, string> {
   return parametros;
 }
 
+function filtroDeHoje(): Filtro {
+  const hoje = hojeEmSaoPaulo();
+  return { dataInicio: hoje, dataFim: hoje, cedenteCnpj: "", moeda: "" };
+}
+
 export default function PaginaLiquidacoes() {
   return (
     <AreaRestrita perfil="OPERADOR">
@@ -36,13 +41,12 @@ export default function PaginaLiquidacoes() {
 }
 
 function Liquidacoes() {
-  const hoje = hojeEmSaoPaulo();
   const [cedentes, setCedentes] = useState<Cedente[]>([]);
-  const [rascunho, setRascunho] = useState<Filtro>({ dataInicio: hoje, dataFim: hoje, cedenteCnpj: "", moeda: "" });
-  const [filtroAplicado, setFiltroAplicado] = useState<Filtro>(rascunho);
+  const [rascunho, setRascunho] = useState<Filtro>(filtroDeHoje);
+  const [filtroAplicado, setFiltroAplicado] = useState<Filtro>(filtroDeHoje);
   const [resultado, setResultado] = useState<PaginaExtrato | null>(null);
   const [erro, setErro] = useState<string | null>(null);
-  const [carregando, setCarregando] = useState(false);
+  const [carregando, setCarregando] = useState(true);
 
   const buscar = useCallback(async (filtro: Filtro, pagina: number) => {
     setCarregando(true);
@@ -59,11 +63,12 @@ function Liquidacoes() {
 
   useEffect(() => {
     api.cedentes().then(setCedentes).catch((e) => setErro(mensagemDe(e)));
-    buscar(rascunho, 0);
-    // carga inicial: só uma vez, ao abrir a tela
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    api
+      .extrato(parametrosDe(filtroDeHoje(), 0))
+      .then(setResultado)
+      .catch((e) => setErro(mensagemDe(e)))
+      .finally(() => setCarregando(false));
   }, []);
-
   function alterar(campo: keyof Filtro, valor: string) {
     setRascunho({ ...rascunho, [campo]: valor });
   }

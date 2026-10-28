@@ -11,6 +11,8 @@ import br.com.srm.creditengine.taxas.TaxaBase;
 import br.com.srm.creditengine.taxas.TaxaCambio;
 import br.com.srm.creditengine.taxas.TaxaService;
 import org.springframework.stereotype.Service;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
 
 import java.math.BigDecimal;
 import java.time.Clock;
@@ -29,10 +31,12 @@ public class CotacaoService {
     private final RecebivelRepository recebivelRepository;
     private final CotacaoRepository cotacaoRepository;
     private final Clock clock;
+    private final Timer tempoMotor;
+
 
     public CotacaoService(MotorPrecificacao motor, TaxaService taxaService, CalculadoraPrazo calculadoraPrazo,
                           CedenteRepository cedenteRepository, RecebivelRepository recebivelRepository,
-                          CotacaoRepository cotacaoRepository, Clock clock) {
+                          CotacaoRepository cotacaoRepository, Clock clock, MeterRegistry metricas) {
         this.motor = motor;
         this.taxaService = taxaService;
         this.calculadoraPrazo = calculadoraPrazo;
@@ -40,6 +44,11 @@ public class CotacaoService {
         this.recebivelRepository = recebivelRepository;
         this.cotacaoRepository = cotacaoRepository;
         this.clock = clock;
+        this.tempoMotor = Timer.builder("precificacao.motor")
+                .description("Tempo de cálculo do motor de precificação")
+                .publishPercentiles(0.5, 0.95, 0.99)
+                .publishPercentileHistogram()
+                .register(metricas);
     }
 
     public PrecificacaoCalculada simular(DadosRecebivelRequest dados){
@@ -81,7 +90,8 @@ public class CotacaoService {
         var entrada = new EntradaPrecificacao(tipo, valorFace, CalculadoraPrazo.emMeses(prazoDias), taxaBase.getTaxaMensal(), moeda, cambio == null? null : cambio.getBrlPorUnidade());
 
         boolean desatualizado = cambio != null && taxaService.cambioDesatualizado(cambio);
-        return new PrecificacaoCalculada(prazoDias, taxaBase, motor.spreadMensal(tipo), cambio, desatualizado, motor.precificar(entrada));
+        var resultado = tempoMotor.record(() -> motor.precificar(entrada));
+        return new PrecificacaoCalculada(prazoDias, taxaBase, motor.spreadMensal(tipo), cambio, desatualizado, resultado);
     }
 
     private Recebivel obterOuCadastrarRecebivel(Cedente cedente, DadosRecebivelRequest dados, String usuario){
