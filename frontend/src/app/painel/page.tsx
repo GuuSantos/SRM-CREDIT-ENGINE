@@ -13,7 +13,7 @@ import { useAgora } from "@/lib/useAgora";
 
 type Etapa = "edicao" | "cotada" | "liquidada";
 
-const ESPERA_SIMULACAO_MS = 400;
+const ESPERA_SIMULACAO_MS = 300;
 const BOTAO = "w-full rounded bg-blue-700 py-2 font-medium text-white hover:bg-blue-800 disabled:opacity-50";
 
 export default function PaginaPainel() {
