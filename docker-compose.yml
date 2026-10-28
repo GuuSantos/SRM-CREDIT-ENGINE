@@ -21,6 +21,7 @@ services:
       postgres:
         condition: service_healthy
     environment:
+      LOGGING_STRUCTURED_FORMAT_CONSOLE: ecs
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/creditengine
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}

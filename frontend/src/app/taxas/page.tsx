@@ -40,9 +40,13 @@ function Taxas() {
     }
   }, []);
 
-  useEffect(() => {
-    carregar();
-  }, [carregar]);
+  // Carga inicial: setState só no callback da resposta
+    useEffect(() => {
+      api
+        .taxasVigentes()
+        .then(setVigentes)
+        .catch((e) => setMensagem({ tipo: "erro", texto: mensagemDe(e) }));
+    }, []);
 
   async function executar(acao: () => Promise<unknown>, sucesso: string): Promise<boolean> {
     setProcessando(true);
