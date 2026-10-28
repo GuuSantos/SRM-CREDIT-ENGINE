@@ -8,6 +8,7 @@ Plataforma de precificação e liquidação de recebíveis (duplicatas e cheques
 | [`DECISIONS.md`](DECISIONS.md) | O que cortei ou simplifiquei, e onde a entrega diverge do SPEC |
 | [`REVIEW.md`](REVIEW.md) | Code review do endpoint do Anexo A, por severidade |
 | [`AI_USAGE.md`](AI_USAGE.md) | Como usei IA, os erros que ela cometeu e como detectei |
+| [`docs/MANUAL.md`](docs/MANUAL.md) | Manual de utilização de cada tela |
 
 ## Como rodar
 
